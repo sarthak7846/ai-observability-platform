@@ -4,6 +4,10 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { OrganizationModule } from './organization/organization.module';
+import { MembershipModule } from './membership/membership.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -12,6 +16,10 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     UserModule,
+    PrismaModule,
+    OrganizationModule,
+    MembershipModule,
+    ProjectModule,
   ],
   controllers: [AppController],
   providers: [AppService],
