@@ -5,6 +5,7 @@ import { User } from 'generated/prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { SignupDto } from './signup.dto';
 import { OrganizationService } from 'src/organization/organization.service';
+import { MembershipService } from 'src/membership/membership.service';
 
 @Injectable()
 export class AuthService {
@@ -12,11 +13,11 @@ export class AuthService {
     private userService: UserService,
     private readonly jwtService: JwtService,
     private organizationService: OrganizationService,
+    private membershipService: MembershipService,
   ) {}
 
   async validateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
-
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (isPasswordValid) return user;
@@ -58,6 +59,12 @@ export class AuthService {
       const org = await this.organizationService.createOrganization(
         `${name}'s organization`,
         'New Org',
+      );
+
+      await this.membershipService.createMembership(
+        newUser.id,
+        org.id,
+        'OWNER',
       );
 
       return {
