@@ -3,8 +3,10 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 import { User } from 'generated/prisma/client';
 import { SignupDto } from './signup.dto';
+import { Public } from './public.decorator';
 
 @Controller('auth')
+@Public()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
