@@ -48,6 +48,6 @@ export class ProjectController {
   @UseGuards(APIKeyGuard)
   trace(@Req() request: { apiKey: string }) {
     console.log('api', request.apiKey);
-    return {};
+    return request.apiKey;
   }
 }
