@@ -7,13 +7,16 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npx tsc -b && node dist/index.js"
   },
   "dependencies": {
-    "typescript": "^7.0.2",
-    "@observe/sdk": "workspace:*"
+    "@observe/sdk": "workspace:*",
+    "dotenv": "^17.4.2",
+    "openai": "^7.5.0",
+    "typescript": "^7.0.2"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^26.2.0"
   }
 }

@@ -1,9 +1,10 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateProjectDto } from './project.dto';
+import { CreateProjectDto, CreateTraceDto } from './project.dto';
 import { OrganizationService } from 'src/organization/organization.service';
 import { MembershipService } from 'src/membership/membership.service';
 import { createHash, randomBytes } from 'crypto';
+import { APIKeyPayload } from './types/api-key.interface';
 
 @Injectable()
 export class ProjectService {
@@ -107,5 +108,24 @@ export class ProjectService {
       id: apiKeyEntry.id,
       projectId: apiKeyEntry.projectId,
     };
+  }
+
+  async createTrace(
+    createTraceDto: CreateTraceDto,
+    apiKeyPayload: APIKeyPayload,
+  ) {
+    const { projectId, id } = apiKeyPayload;
+    const trace = await this.prismaService.trace.create({
+      data: {
+        ...createTraceDto,
+        projectId,
+        apiKeyId: id,
+        input: JSON.stringify(createTraceDto.input),
+        output: JSON.stringify(createTraceDto.output),
+        metadata: JSON.stringify(createTraceDto.metadata),
+      },
+    });
+
+    return trace;
   }
 }

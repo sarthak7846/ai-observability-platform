@@ -8,11 +8,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { CreateAPIKeyDto, CreateProjectDto } from './project.dto';
+import {
+  CreateAPIKeyDto,
+  CreateProjectDto,
+  CreateTraceDto,
+} from './project.dto';
 import { User } from 'src/auth/user.decorator';
 import { UserPayload } from 'src/common/interfaces/user-payload.interface';
 import { APIKeyGuard } from 'src/common/guards/api-key.guard';
 import { Public } from 'src/auth/public.decorator';
+import { APIKeyPayload } from './types/api-key.interface';
 
 @Controller('project')
 export class ProjectController {
@@ -46,8 +51,13 @@ export class ProjectController {
   @Post('trace')
   @Public()
   @UseGuards(APIKeyGuard)
-  trace(@Req() request: { apiKey: string }) {
-    console.log('api', request.apiKey);
-    return request.apiKey;
+  trace(
+    @Req()
+    request: {
+      apiKey: APIKeyPayload;
+    },
+    @Body() createTraceDto: CreateTraceDto,
+  ) {
+    return this.projectService.createTrace(createTraceDto, request.apiKey);
   }
 }
