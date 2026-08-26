@@ -1,5 +1,5 @@
 import { TraceData } from "../types";
 
 export interface ProviderAdapter {
-    extract(response: unknown): Partial<TraceData>;
+    extract(request: unknown, response: unknown): Partial<TraceData>;
 }

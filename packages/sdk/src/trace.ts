@@ -1,3 +1,4 @@
+import { ProviderAdapter } from "./providers/provider-adapter";
 import { Transport } from "./transport";
 import { EndTracePayload, StartTracePayload, TraceStatus } from "./types";
 
@@ -8,18 +9,27 @@ export class Trace {
   constructor(
     private readonly transport: Transport,
     private readonly options: StartTracePayload,
+    private readonly adapter: ProviderAdapter,
   ) {
     this.traceId = crypto.randomUUID();
     this.startedAt = new Date();
   }
 
-  async capture<T>(fn: () => Promise<T>): Promise<T> {
+  async capture<T>(
+    input: Record<string, unknown>,
+    fn: () => Promise<T>,
+  ): Promise<T> {
     try {
       const result = await fn();
 
-      await this.end({
+      const extracted = this.adapter.extract(input, result);
+
+      const res = await this.end({
         status: TraceStatus.SUCCESS,
+        ...extracted,
       });
+
+      console.log("got res from be", res);
 
       return result;
     } catch (error) {

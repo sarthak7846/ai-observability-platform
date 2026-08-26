@@ -17,6 +17,7 @@ export interface TraceData {
   inputTokens?: number;
   outputTokens?: number;
   totalTokens?: number;
+  input?: Record<string, unknown>;
   output?: Record<string, unknown>;
 }
 

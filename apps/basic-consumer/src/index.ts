@@ -1,9 +1,8 @@
 import { Observe, TraceStatus } from "@observe/sdk";
 import OpenAI from "openai";
-import 'dotenv/config';
+import "dotenv/config";
 
-
-console.log(process.env.OPENAI_API_KEY)
+console.log(process.env.OPENAI_API_KEY);
 
 const observe = new Observe({
   apiKey:
@@ -18,12 +17,19 @@ const trace = observe.startTrace({
   provider: "openai",
 });
 
-const response = await trace.capture(async () => {
-  return client.responses.create({
-    model: "gpt-5.6",
-    input: "Write a one-sentence bedtime story about a unicorn.",
-  });
-});
+console.log("trace", trace);
+
+const response = await trace.capture(
+  {
+    message: "Write a one-sentence bedtime story about a unicorn.",
+  },
+  async () => {
+    return client.responses.create({
+      model: "gpt-5.6",
+      input: "Write a one-sentence bedtime story about a unicorn.",
+    });
+  },
+);
 
 // const response = await trace.capture(async () => {
 //   return new Promise((resolve, reject) => {
@@ -37,7 +43,7 @@ const response = await trace.capture(async () => {
 //   });
 // });
 
-console.log("result", response);
+console.log("result", JSON.stringify(response, null, 2));
 
 // setTimeout(async () => {
 //   await trace.end({
