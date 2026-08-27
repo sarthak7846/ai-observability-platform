@@ -5,6 +5,7 @@ import { OrganizationService } from 'src/organization/organization.service';
 import { MembershipService } from 'src/membership/membership.service';
 import { createHash, randomBytes } from 'crypto';
 import { APIKeyPayload } from './types/api-key.interface';
+import { KafkaService } from 'src/kafka/kafka.service';
 
 @Injectable()
 export class ProjectService {
@@ -13,6 +14,7 @@ export class ProjectService {
     @Inject(forwardRef(() => OrganizationService))
     private readonly organizationService: OrganizationService,
     private readonly membershipService: MembershipService,
+    private readonly kafkaService: KafkaService,
   ) {}
 
   async createProject(dto: CreateProjectDto, userId: string) {
@@ -115,17 +117,27 @@ export class ProjectService {
     apiKeyPayload: APIKeyPayload,
   ) {
     const { projectId, id } = apiKeyPayload;
-    const trace = await this.prismaService.trace.create({
-      data: {
-        ...createTraceDto,
-        projectId,
-        apiKeyId: id,
-        input: JSON.stringify(createTraceDto.input),
-        output: JSON.stringify(createTraceDto.output),
-        metadata: JSON.stringify(createTraceDto.metadata),
-      },
+
+    // const trace = await this.prismaService.trace.create({
+    //   data: {
+    //     ...createTraceDto,
+    //     projectId,
+    //     apiKeyId: id,
+    //     input: JSON.stringify(createTraceDto.input),
+    //     output: JSON.stringify(createTraceDto.output),
+    //     metadata: JSON.stringify(createTraceDto.metadata),
+    //   },
+    // });
+
+    await this.kafkaService.publishTrace({
+      ...createTraceDto,
+      projectId,
+      apiKeyId: id,
+      input: JSON.stringify(createTraceDto.input),
+      output: JSON.stringify(createTraceDto.output),
+      metadata: JSON.stringify(createTraceDto.metadata),
     });
 
-    return trace;
+    return { accepted: true };
   }
 }
