@@ -17,7 +17,7 @@ const trace = observe.startTrace({
   provider: "openai",
 });
 
-console.log("trace", trace);
+// console.log("trace", trace);
 
 const response = await trace.capture(
   {

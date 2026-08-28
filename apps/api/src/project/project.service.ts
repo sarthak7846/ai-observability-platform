@@ -117,8 +117,7 @@ export class ProjectService {
     apiKeyPayload: APIKeyPayload,
   ) {
     const { projectId, id } = apiKeyPayload;
-
-    // const trace = await this.prismaService.trace.create({
+    // const trace = await prisma.trace.create({
     //   data: {
     //     ...createTraceDto,
     //     projectId,
@@ -133,9 +132,9 @@ export class ProjectService {
       ...createTraceDto,
       projectId,
       apiKeyId: id,
-      input: JSON.stringify(createTraceDto.input),
-      output: JSON.stringify(createTraceDto.output),
-      metadata: JSON.stringify(createTraceDto.metadata),
+      input: createTraceDto.input,
+      output: createTraceDto.output,
+      metadata: createTraceDto.metadata,
     });
 
     return { accepted: true };

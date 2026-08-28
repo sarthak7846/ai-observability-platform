@@ -10,7 +10,7 @@ export class KafkaService {
     private readonly kafka: ClientKafka,
   ) {}
 
-  async publishTrace(trace: Prisma.TraceUncheckedCreateInput): Promise<void> {
+  async publishTrace(trace: any): Promise<void> {
     console.log('Publishing:', new Date().toISOString());
 
     await lastValueFrom(this.kafka.emit('trace.created', trace));
