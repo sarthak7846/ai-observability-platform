@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { Prisma } from 'generated/prisma/client';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()

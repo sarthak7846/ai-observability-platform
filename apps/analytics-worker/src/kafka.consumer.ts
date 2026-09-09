@@ -1,4 +1,13 @@
+import 'dotenv/config';
+import { prisma } from "@observe/db";
 import { Kafka } from "kafkajs";
+
+
+// export const callPrisma = async () => {
+//   const createdTrace = await prisma.trace.findMany();
+//   console.log('created trace', createdTrace)
+// }
+
 
 const kafka = new Kafka({
   clientId: "observe-analytics-worker",
@@ -23,7 +32,10 @@ export const startKafkaConsumer = async () => {
 
       const trace = JSON.parse(message.value.toString());
 
-      console.log("Received trace", trace);
+      const createdTrace = await prisma.trace.create({
+        data: trace,
+      });
+      console.log("Received trace", trace, createdTrace);
     },
   });
 };

@@ -1,9 +1,9 @@
 import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
-import { User } from 'generated/prisma/client';
 import { SignupDto } from './signup.dto';
 import { Public } from './public.decorator';
+import { User } from '@observe/db';
 
 @Controller('auth')
 @Public()

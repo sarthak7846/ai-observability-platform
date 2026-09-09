@@ -7,7 +7,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "npx tsc -b && node dist/index.js"
+    "start": "npx tsc -b && node dist/index.js"
   },
   "dependencies": {
     "@observe/sdk": "workspace:*",

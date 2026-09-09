@@ -1,16 +1,15 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProjectDto, CreateTraceDto } from './project.dto';
 import { OrganizationService } from 'src/organization/organization.service';
 import { MembershipService } from 'src/membership/membership.service';
 import { createHash, randomBytes } from 'crypto';
 import { APIKeyPayload } from './types/api-key.interface';
 import { KafkaService } from 'src/kafka/kafka.service';
+import { prisma } from '@observe/db';
 
 @Injectable()
 export class ProjectService {
   constructor(
-    private readonly prismaService: PrismaService,
     @Inject(forwardRef(() => OrganizationService))
     private readonly organizationService: OrganizationService,
     private readonly membershipService: MembershipService,
@@ -23,7 +22,7 @@ export class ProjectService {
       userId,
     );
 
-    return this.prismaService.project.create({
+    return prisma.project.create({
       data: {
         organizationId: dto.organizationId,
         name: dto.name,
@@ -33,7 +32,7 @@ export class ProjectService {
   }
 
   async getAllProjects(organizationId?: string) {
-    const projects = await this.prismaService.project.findMany({
+    const projects = await prisma.project.findMany({
       where: {
         organizationId,
       },
@@ -43,7 +42,7 @@ export class ProjectService {
   }
 
   async createAPIKey(projectId: string, userId: string, name: string) {
-    const project = await this.prismaService.project.findUniqueOrThrow({
+    const project = await prisma.project.findUniqueOrThrow({
       where: {
         id: projectId,
       },
@@ -59,7 +58,7 @@ export class ProjectService {
     const rawKey = `obs_live_${randomPart}`;
     const keyHash = createHash('sha256').update(rawKey).digest('hex');
 
-    const { id } = await this.prismaService.aPIKey.create({
+    const { id } = await prisma.aPIKey.create({
       data: {
         projectId,
         name,
@@ -75,7 +74,7 @@ export class ProjectService {
   }
 
   async getAllAPIKeys(projectId: string, userId: string) {
-    const project = await this.prismaService.project.findUniqueOrThrow({
+    const project = await prisma.project.findUniqueOrThrow({
       where: {
         id: projectId,
       },
@@ -86,7 +85,7 @@ export class ProjectService {
       project.organizationId,
     );
 
-    const apiKeys = await this.prismaService.aPIKey.findMany({
+    const apiKeys = await prisma.aPIKey.findMany({
       where: {
         projectId,
       },
@@ -98,7 +97,7 @@ export class ProjectService {
   async verifyAPIKey(apiKey: string) {
     const keyHash = createHash('sha256').update(apiKey).digest('hex');
 
-    const apiKeyEntry = await this.prismaService.aPIKey.findFirst({
+    const apiKeyEntry = await prisma.aPIKey.findFirst({
       where: {
         keyHash,
       },
@@ -117,16 +116,6 @@ export class ProjectService {
     apiKeyPayload: APIKeyPayload,
   ) {
     const { projectId, id } = apiKeyPayload;
-    // const trace = await prisma.trace.create({
-    //   data: {
-    //     ...createTraceDto,
-    //     projectId,
-    //     apiKeyId: id,
-    //     input: JSON.stringify(createTraceDto.input),
-    //     output: JSON.stringify(createTraceDto.output),
-    //     metadata: JSON.stringify(createTraceDto.metadata),
-    //   },
-    // });
 
     await this.kafkaService.publishTrace({
       ...createTraceDto,

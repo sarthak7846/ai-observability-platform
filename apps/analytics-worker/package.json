@@ -11,8 +11,9 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "kafkajs": "^2.2.4",
-    "@observe/db": "workspace:*"
+    "@observe/db": "workspace:*",
+    "dotenv": "^17.4.2",
+    "kafkajs": "^2.2.4"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

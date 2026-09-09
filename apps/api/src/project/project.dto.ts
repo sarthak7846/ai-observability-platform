@@ -1,3 +1,4 @@
+import { TraceStatus } from '@observe/db';
 import {
   IsNotEmpty,
   IsString,
@@ -9,7 +10,6 @@ import {
   IsISO8601,
   Min,
 } from 'class-validator';
-import { TraceStatus } from 'generated/prisma/enums';
 
 export class CreateProjectDto {
   @IsUUID()
