@@ -108,7 +108,7 @@ model Trace {
   apiKey  APIKey? @relation(fields: [apiKeyId], references: [id])
 
   @@index([projectId, createdAt])
-  @@index([projectId, traceId])
+  @@unique([projectId, traceId])
   @@index([apiKeyId])
   @@index([status])
 }
