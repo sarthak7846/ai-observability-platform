@@ -1,0 +1,24 @@
+{
+  "name": "traffic-simulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "pnpm build && node dist/index.js",
+    "build": "tsup src/index.ts --format esm"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@observe/sdk": "workspace:*",
+    "dotenv": "^17.4.2",
+    "typescript": "^7.0.2"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^26.5.1",
+    "tsup": "^8.5.1"
+  }
+}
