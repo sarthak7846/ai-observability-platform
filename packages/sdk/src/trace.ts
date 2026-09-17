@@ -29,7 +29,7 @@ export class Trace {
         ...extracted,
       });
 
-      console.log("got res from be", res);
+      // console.log('be response', res)
 
       return result;
     } catch (error) {
